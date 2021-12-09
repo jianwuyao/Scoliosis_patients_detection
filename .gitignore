@@ -1,0 +1,17 @@
+.idea
+.gradle
+.cxx
+build/
+__pycache__/
+test_image/*
+output/*
+log/*
+data/*
+models/*
+
+*.mp4
+*.jpg
+*.pth
+*.onnx
+*.mnn
+*.bat

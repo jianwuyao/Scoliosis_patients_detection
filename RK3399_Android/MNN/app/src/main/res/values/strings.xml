@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">脊柱侧弯病人检测</string>
+    <string name="please_wait">模型加载中……</string>
+    <string name="pose_view">人体检测框与关键点可视化</string>
+    <string name="select_img">选择照片</string>
+    <string name="open_camera">实时检测</string>
+</resources>

@@ -1,0 +1,2 @@
+rootProject.name = 'Scoliosis_patients_detection'
+include ':app'
