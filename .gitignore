@@ -1,6 +1,7 @@
 .idea
 .gradle
 .cxx
+.vscode
 build/
 __pycache__/
 test_image/*
