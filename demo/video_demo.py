@@ -20,11 +20,12 @@ import cv2
 import numpy as np
 import time
 
-import lib.models
-from lib.config import cfg
-from lib.config import update_config
-from lib.core.inference import get_final_preds
-from lib.utils.transforms import get_affine_transform
+import _init_paths
+import models
+from config import cfg
+from config import update_config
+from core.inference import get_final_preds
+from utils.transforms import get_affine_transform
 
 COCO_KEYPOINT_INDEXES = {
     0: 'nose', 1: 'left_eye', 2: 'right_eye', 3: 'left_ear', 4: 'right_ear', 5: 'left_shoulder',
@@ -140,20 +141,15 @@ def parse_args():
     """ 解析参数 """
     parser = argparse.ArgumentParser(description='Train keypoints network')
 
-    parser.add_argument('--cfg', type=str, default='inference-config.yaml')
-    parser.add_argument('--videoFile', type=str, default='./video/basketball.mp4')
-    parser.add_argument('--outputDir', type=str, default='../output/')
+    parser.add_argument('--cfg', type=str, default='demo/coco_demo_config.yaml')
+    parser.add_argument('--videoFile', type=str, default='demo/video/basketball.mp4')
+    parser.add_argument('--outputDir', type=str, default='output/')
     parser.add_argument('--inferenceFps', type=int, default=10)
     parser.add_argument('--writeBoxFrames', default=True)
     parser.add_argument('--drawSkeletons', default=True)
     parser.add_argument('opts', help='Modify config options using the command-line',
                         default=None, nargs=argparse.REMAINDER)
     args = parser.parse_args()
-
-    # args expected by supporting codebase
-    args.modelDir = ''
-    args.logDir = ''
-    args.dataDir = ''
     return args
 
 
@@ -175,7 +171,7 @@ def main():
     box_model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
     box_model.to(CTX)
     box_model.eval()
-    pose_model = eval('lib.models.'+cfg.MODEL.NAME+'.get_pose_net')(cfg, is_train=False)
+    pose_model = eval('models.'+cfg.MODEL.NAME+'.get_pose_net')(cfg, is_train=False)
 
     if cfg.TEST.MODEL_FILE:
         print('=> loading model from {}'.format(cfg.TEST.MODEL_FILE))

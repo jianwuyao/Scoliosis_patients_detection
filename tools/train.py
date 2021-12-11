@@ -15,24 +15,25 @@ import torch.utils.data.distributed
 import torchvision.transforms as transforms
 from tensorboardX import SummaryWriter
 
-import lib.dataset
-import lib.models
-from lib.config import cfg
-from lib.config import update_config
-from lib.core.loss import JointsMSELoss
-from lib.core.function import train
-from lib.core.function import validate
-from lib.utils.utils import get_optimizer
-from lib.utils.utils import save_checkpoint
-from lib.utils.utils import create_logger
-from lib.utils.utils import get_model_summary
+import _init_paths
+import dataset
+import models
+from config import cfg
+from config import update_config
+from core.loss import JointsMSELoss
+from core.function import train
+from core.function import validate
+from utils.utils import get_optimizer
+from utils.utils import save_checkpoint
+from utils.utils import create_logger
+from utils.utils import get_model_summary
 
 
 def parse_args():
     """ 解析参数 """
     parser = argparse.ArgumentParser(description='Train keypoints network')
     parser.add_argument('--cfg', help='experiment configure file name', type=str,
-                        default='../experiments/coco/hrnet/w32_256x192_adam_lr1e-3.yaml')
+                        default='experiments/coco/hrnet/w32_256x192_adam_lr1e-3.yaml')
     parser.add_argument('opts', help="Modify config options using the command-line",
                         default=None, nargs=argparse.REMAINDER)
     args = parser.parse_args()
@@ -52,7 +53,7 @@ def main():
     torch.backends.cudnn.deterministic = cfg.CUDNN.DETERMINISTIC
     torch.backends.cudnn.enabled = cfg.CUDNN.ENABLED
 
-    model = eval('lib.models.'+cfg.MODEL.NAME+'.get_pose_net')(cfg, is_train=True)
+    model = eval('models.'+cfg.MODEL.NAME+'.get_pose_net')(cfg, is_train=True)
     # logger.info(pprint.pformat(model))
 
     writer_dict = {'writer': SummaryWriter(log_dir=final_log_dir),
@@ -73,11 +74,11 @@ def main():
 
     # 创建训练与测试数据的迭代器
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    train_dataset = eval('lib.dataset.'+cfg.DATASET.DATASET)(
+    train_dataset = eval('dataset.'+cfg.DATASET.DATASET)(
         cfg, cfg.DATASET.ROOT, cfg.DATASET.TRAIN_SET, True,
         transforms.Compose([transforms.ToTensor(), normalize, ])
     )
-    valid_dataset = eval('lib.dataset.'+cfg.DATASET.DATASET)(
+    valid_dataset = eval('dataset.'+cfg.DATASET.DATASET)(
         cfg, cfg.DATASET.ROOT, cfg.DATASET.TEST_SET, False,
         transforms.Compose([transforms.ToTensor(), normalize, ])
     )

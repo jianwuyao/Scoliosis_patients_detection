@@ -47,4 +47,4 @@ POSE_HIGH_RESOLUTION_NET.STAGE4.FUSE_METHOD = 'SUM'
 
 
 MODEL_EXTRAS = {'pose_resnet': POSE_RESNET,
-                'pose_high_resolution_net': POSE_HIGH_RESOLUTION_NET, }
+            'pose_high_resolution_net': POSE_HIGH_RESOLUTION_NET,}

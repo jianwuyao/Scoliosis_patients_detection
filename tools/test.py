@@ -14,20 +14,21 @@ import torch.utils.data
 import torch.utils.data.distributed
 import torchvision.transforms as transforms
 
-import lib.dataset
-import lib.models
-from lib.config import cfg
-from lib.config import update_config
-from lib.core.loss import JointsMSELoss
-from lib.core.function import validate
-from lib.utils.utils import create_logger
+import _init_paths
+import dataset
+import models
+from config import cfg
+from config import update_config
+from core.loss import JointsMSELoss
+from core.function import validate
+from utils.utils import create_logger
 
 
 def parse_args():
     """ 解析参数 """
     parser = argparse.ArgumentParser(description='Train keypoints network')
     parser.add_argument('--cfg', help='experiment configure file name', type=str,
-                        default='../experiments/coco/hrnet/w32_256x192_adam_lr1e-3.yaml')
+                        default='experiments/coco/hrnet/w32_256x192_adam_lr1e-3.yaml')
     parser.add_argument('opts', help="Modify config options using the command-line",
                         default=None, nargs=argparse.REMAINDER)
     args = parser.parse_args()
@@ -47,7 +48,7 @@ def main():
     torch.backends.cudnn.deterministic = cfg.CUDNN.DETERMINISTIC
     torch.backends.cudnn.enabled = cfg.CUDNN.ENABLED
 
-    model = eval('lib.models.'+cfg.MODEL.NAME+'.get_pose_net')(cfg, is_train=False)
+    model = eval('models.'+cfg.MODEL.NAME+'.get_pose_net')(cfg, is_train=False)
 
     if cfg.TEST.MODEL_FILE:
         logger.info('=> loading model from {}'.format(cfg.TEST.MODEL_FILE))
@@ -64,7 +65,7 @@ def main():
 
     # Data loading code
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    valid_dataset = eval('lib.dataset.'+cfg.DATASET.DATASET)(
+    valid_dataset = eval('dataset.'+cfg.DATASET.DATASET)(
         cfg, cfg.DATASET.ROOT, cfg.DATASET.TEST_SET, False,
         transforms.Compose([transforms.ToTensor(), normalize, ])
     )

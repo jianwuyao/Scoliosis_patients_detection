@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 import numpy as np
 from scipy.io import loadmat, savemat
-from .JointsDataset import JointsDataset
+from dataset.JointsDataset import JointsDataset
 
 
 logger = logging.getLogger(__name__)

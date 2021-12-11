@@ -1,27 +1,25 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import argparse
+import csv
+import os
+import time
+
+import _init_paths
+import models
+import cv2
+import numpy as np
 import torch
-import torch.nn.parallel
 import torch.backends.cudnn as cudnn
+import torch.nn.parallel
 import torch.optim
 import torch.utils.data
 import torch.utils.data.distributed
-import torchvision.transforms as transforms
 import torchvision
-import cv2
-import csv
-import os
-import numpy as np
-import time
-
-import lib.models
-from lib.config import cfg
-from lib.config import update_config
-from lib.core.function import get_final_preds
-from lib.utils.transforms import get_affine_transform
+import torchvision.transforms as transforms
+from config import cfg, update_config
+from core.function import get_final_preds
+from utils.transforms import get_affine_transform
 
 MPII_KEYPOINT_INDEXES = {
     0: 'right_ankle', 1: 'right_knee', 2: 'right_hip', 3: 'left_hip', 4: 'left_knee', 5: 'left_ankle',
@@ -127,7 +125,7 @@ def parse_args():
     """ 解析参数 """
     parser = argparse.ArgumentParser(description='Train keypoints network')
 
-    parser.add_argument('--cfg', type=str, default='mpii_demo_config.yaml')
+    parser.add_argument('--cfg', type=str, default='demo/mpii_demo_config.yaml')
     parser.add_argument('--webcam', type=bool, default=False)
     parser.add_argument('--video', type=str, default='')
     parser.add_argument('--image', type=bool, default=True)
@@ -135,7 +133,7 @@ def parse_args():
     parser.add_argument('--writeBoxFrames', type=bool, default=False)
     parser.add_argument('--saveFile', type=bool, default=True)
     parser.add_argument('--showFps', type=bool, default=True)
-    parser.add_argument('--outputDir', type=str, default='../output/mpii_demo')
+    parser.add_argument('--outputDir', type=str, default='output/mpii_demo')
     parser.add_argument('opts', help='Modify config options using the command-line',
                         default=None, nargs=argparse.REMAINDER)
     args = parser.parse_args()
@@ -155,7 +153,7 @@ def main():
     box_model.to(CTX)
     box_model.eval()
 
-    pose_model = eval('lib.models.' + cfg.MODEL.NAME + '.get_pose_net')(cfg, is_train=False)  # 姿态估计模型
+    pose_model = eval('models.' + cfg.MODEL.NAME + '.get_pose_net')(cfg, is_train=False)  # 姿态估计模型
 
     if cfg.TEST.MODEL_FILE:
         print('=> loading model from {}'.format(cfg.TEST.MODEL_FILE))
@@ -176,7 +174,7 @@ def main():
         estimate_webcam_or_video(args, box_model, pose_model, vidcap)
     elif args.image:
         csv_output_rows = []
-        for filename in os.listdir("./image/"):  # 注意图像存储路径
+        for filename in os.listdir("demo/image/"):  # 注意图像存储路径
             if filename[-4:] == '.jpg':
                 new_csv_row = ['image_{}'.format(filename[:-4])]
                 new_csv_row.extend(estimate_image(args, box_model, pose_model, filename))
@@ -256,7 +254,7 @@ def estimate_webcam_or_video(args, box_model, pose_model, vidcap):
 
 def estimate_image(args, box_model, pose_model, filename):
     """ estimate on the image """
-    image_bgr = cv2.imread('./image/' + filename)
+    image_bgr = cv2.imread('demo/image/' + filename)
     image = image_bgr[:, :, [2, 1, 0]]
 
     input = []

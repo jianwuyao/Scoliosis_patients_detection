@@ -8,10 +8,10 @@ import os
 import numpy as np
 import torch
 
-from .evaluate import accuracy
-from .inference import get_final_preds
-from lib.utils.transforms import flip_back
-from lib.utils.vis import save_debug_images
+from core.evaluate import accuracy
+from core.inference import get_final_preds
+from utils.transforms import flip_back
+from utils.vis import save_debug_images
 
 
 logger = logging.getLogger(__name__)
