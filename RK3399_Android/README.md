@@ -12,12 +12,12 @@
 模型结构可视化：https://netron.app/
 ```
 
-6. body_ssd_300.mnn 是人体目标检测模型，用于从图像中选取一个人，将其裁剪出来输入关键点检测模型；pose_hrnet_256.mnn 是人体目标检测模型，输出16张heatmap，从而得到每个关键点的位置；
+6. body_ssd_300.mnn 是人体目标检测模型，用于从图像中选取一个人，将其裁剪出来输入关键点检测模型；pose_hrnet_256.mnn 是人体目标检测模型，输出 16 张 heatmap，从而得到每个关键点的位置；
 
 
 ```python
-body_ssd用的是SSD算法：https://blog.csdn.net/qianqing13579/article/details/82106664
-pose_hrnet用的是HRNet网络：https://blog.csdn.net/xiaolouhan/article/details/90142937
+body_ssd 用的是 SSD 算法：https://blog.csdn.net/qianqing13579/article/details/82106664
+pose_hrnet 用的是 HRNet 网络：https://blog.csdn.net/xiaolouhan/article/details/90142937
 ```
 
 7. 利用 adb 工具将两个 mnn 模型文件放在手机内部存储空间的 MNN/ 文件夹，将配置文件 config.json 放在内部存储的根目录；在根目录创建 Results 文件夹，用于保存结果文件；将需检测的图片放在手机内部存储空间的 DCIM/Camera 文件夹（均可在代码中自定义路径）；
